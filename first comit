@@ -1,0 +1,117 @@
+CREATE DATABASE  db_AcdnRentalCar;
+USE db_AcdnRentalCar;
+
+CREATE TABLE tb_sedes (
+  id INT NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(50) NOT NULL,
+  endereco VARCHAR(80) NOT NULL,
+  telefone VARCHAR(20) NOT NULL,
+  nome_gerente VARCHAR(50) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE  tb_classesCarro (
+  id INT(10) NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(20) NOT NULL,
+  valorDiaria DECIMAL(8,2) NOT NULL,
+  PRIMARY KEY (id)
+) ;
+
+CREATE TABLE tb_carros (
+  id INT NOT NULL AUTO_INCREMENT,
+  placa VARCHAR(10) NOT NULL,
+  modelo VARCHAR(40) NOT NULL,
+  ano YEAR NOT NULL,
+  cor VARCHAR(20) NOT NULL,
+  quilometragem DECIMAL(10,2) NOT NULL,
+  descricao VARCHAR(255) NOT NULL,
+  situacao VARCHAR(30) NOT NULL,
+  origemCarro INT NOT NULL,
+  localizacaoCarro INT NOT NULL,
+  classeCarro INT NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_carros_origem FOREIGN KEY (origemCarro) REFERENCES tb_sedes(id),
+  CONSTRAINT fk_carros_localizacao FOREIGN KEY (localizacaoCarro) REFERENCES tb_sedes(id),
+  CONSTRAINT fk_carros_classe FOREIGN KEY (classeCarro) REFERENCES tb_classesCarro(id)
+) ;
+
+
+CREATE TABLE  tb_clientes (
+  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(50) NOT NULL,
+  cnh VARCHAR(20) NOT NULL,
+  validadeCnh DATE NOT NULL,
+  categoriaCnh VARCHAR(3) NOT NULL,
+  PRIMARY KEY (id)
+) ;
+
+CREATE TABLE tb_reservas (
+  numero INT NOT NULL AUTO_INCREMENT,
+  diarias INT NOT NULL,
+  dataLocacao DATE NOT NULL,
+  dataRetorno DATE,
+  quilometrosRodados DECIMAL(10,2),
+  situacao VARCHAR(15) NOT NULL,
+  total DECIMAL(10,2),
+  carro_reserva INT NOT NULL,
+  cliente_reserva INT NOT NULL,
+  sedeLocacao INT NOT NULL,
+  sedeDevolucao INT NOT NULL,
+  PRIMARY KEY (numero),
+  CONSTRAINT fk_reserva_carro FOREIGN KEY (carro_reserva) REFERENCES tb_carros(id),
+  CONSTRAINT fk_reserva_cliente FOREIGN KEY (cliente_reserva) REFERENCES tb_clientes(id),
+  CONSTRAINT fk_reserva_sedeLocacao FOREIGN KEY (sedeLocacao) REFERENCES tb_sedes(id),
+  CONSTRAINT fk_reserva_sedeDevolucao FOREIGN KEY (sedeDevolucao) REFERENCES tb_sedes(id));
+
+
+
+
+INSERT INTO tb_sedes (nome, endereco, telefone, nome_gerente) VALUES
+('Sede Central', 'Av. Brasil, 1000, Asa Norte, Brasília, DF', '+55 61 3210-1000', 'Mariana Alves'),
+('Sede Sul', 'R. das Acácias, 245, Lago Sul, Brasília, DF', '+55 61 3210-1101', 'Ricardo Ferreira');
+
+
+INSERT INTO tb_classesCarro (nome, valorDiaria) VALUES
+('Econômico', 89.90),
+('Compacto', 109.90),
+('Intermediário', 139.90),
+('Executivo', 189.90),
+('Luxo', 349.90),
+('SUV', 229.90),
+('Esportivo', 279.90),
+('Utilitário', 119.90);
+
+
+INSERT INTO tb_clientes (nome, cnh, validadeCnh, categoriaCnh) VALUES
+('Renata Lima', '22232425868', '2029-04-07', 'E'),
+('Fábio Andrade', '23242526979', '2026-11-01', 'B'),
+('Tatiana Souza', '24252627080', '2028-07-14', 'C'),
+('Gustavo Rocha', '25262728191', '2027-02-18', 'B'),
+('Amanda Silva', '26272829302', '2026-10-23', 'A'),
+('Pedro Henrique', '27282930413', '2029-03-09', 'D'),
+('Jéssica Freitas', '28293031524', '2027-06-04', 'AB'),
+('Leonardo Costa', '29303132635', '2028-01-26', 'B'),
+('Carolina Mendes', '30313233746', '2026-05-17', 'C'),
+('Matheus Lima', '31323334857', '2027-09-30', 'B'),
+('Sabrina Oliveira', '32333435968', '2028-08-08', 'E');
+
+INSERT INTO tb_carros (placa, modelo, ano, cor, quilometragem, descricao, situacao, origemCarro, localizacaoCarro, classeCarro) VALUES
+('ABC2B01', 'Fiat Mobi', 2020, 'Branco', 31000.00, 'Carro econômico urbano', 'Disponível', 2, 2, 1),
+('ABC2B02', 'Chevrolet Onix', 2021, 'Preto', 27000.00, 'Hatch compacto moderno', 'Disponível', 2, 2, 2),
+('ABC2B03', 'Volkswagen Voyage', 2019, 'Prata', 44000.00, 'Sedã intermediário confiável', 'Disponível', 2, 2, 3),
+('ABC2B04', 'Toyota Corolla', 2022, 'Cinza', 14000.00, 'Executivo com conforto premium', 'Disponível', 2, 2, 4),
+('ABC2B05', 'BMW Série 3', 2023, 'Azul', 7000.00, 'Luxo e desempenho', 'Disponível', 2, 2, 5),
+('ABC2B06', 'Jeep Renegade', 2021, 'Vermelho', 21000.00, 'SUV compacto e robusto', 'Disponível', 2, 2, 6),
+('ABC2B07', 'Ford Mustang', 2020, 'Amarelo', 17000.00, 'Esportivo de alto desempenho', 'Disponível', 2, 2, 7),
+('ABC2B08', 'Fiat Fiorino', 2019, 'Branco', 51000.00, 'Utilitário para entregas', 'Disponível', 2, 2, 8),
+('ABC2B09', 'Hyundai HB20', 2022, 'Preto', 11000.00, 'Compacto urbano', 'Disponível', 2, 2, 2),
+('ABC2B10', 'Renault Kwid', 2021, 'Cinza', 24000.00, 'Econômico e versátil', 'Disponível', 2, 2, 1);
+
+
+select * from tb_classescarro ;
+select * from tb_clientes ;
+select * from tb_carros;
+select * from tb_sedes ; 
+select * from tb_reserva;
+
+create table tb_reservas ; 
